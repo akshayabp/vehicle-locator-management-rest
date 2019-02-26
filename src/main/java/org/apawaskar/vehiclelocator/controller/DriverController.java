@@ -1,0 +1,57 @@
+package org.apawaskar.vehiclelocator.controller;
+
+import java.util.List;
+
+import org.apawaskar.vehiclelocator.domain.Driver;
+import org.apawaskar.vehiclelocator.repos.DriverRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@CrossOrigin
+@Transactional
+public class DriverController {
+	
+	@Autowired
+	private DriverRepository driverRepo;
+	
+	@RequestMapping("/driver/{id}")
+	public Driver getDriver(@PathVariable("id") long id){	
+		
+		Driver driver1 =driverRepo.find(id);		
+		return driver1;
+	}
+	
+	@RequestMapping(value="/driver",  method=RequestMethod.POST, consumes="application/json")
+	public Driver createDriver(@RequestBody Driver driver){
+		System.out.println("Driver created:" + driver);
+		
+		Driver createdDriver = driverRepo.save(driver);
+		
+		return createdDriver;
+	}
+
+	@RequestMapping("/drivers")
+	public List<Driver> getAllDrivers(){		
+		List<Driver> drivers = driverRepo.findAll();		
+		return drivers;
+	}
+	
+	@RequestMapping(value="/driver",  method=RequestMethod.PUT, consumes="application/json")
+	public Driver updateDriver(@RequestBody Driver driver){
+		Driver createdDriver = driverRepo.update(driver);
+		return createdDriver;
+	}
+	
+	@RequestMapping(value="/driver/{id}",  method=RequestMethod.DELETE)
+	public void deleteVehicle(@PathVariable("id") long id){			
+		driverRepo.delete(id);		
+		
+	}
+}

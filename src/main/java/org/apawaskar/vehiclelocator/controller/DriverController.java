@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apawaskar.vehiclelocator.domain.Driver;
 import org.apawaskar.vehiclelocator.repos.DriverRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,22 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Transactional
 public class DriverController {
 	
+	private static final Logger LOGGER = LoggerFactory.getLogger(DriverController.class);
+	
 	@Autowired
 	private DriverRepository driverRepo;
 	
 	@RequestMapping("/driver/{id}")
-	public Driver getDriver(@PathVariable("id") long id){	
-		
-		Driver driver1 =driverRepo.find(id);		
-		return driver1;
+	public Driver getDriver(@PathVariable("id") long id){			
+		Driver driver =driverRepo.find(id);	
+		LOGGER.info("Driver for {} : {}", id, driver);
+		return driver;
 	}
 	
 	@RequestMapping(value="/driver",  method=RequestMethod.POST, consumes="application/json")
 	public Driver createDriver(@RequestBody Driver driver){
-		System.out.println("Driver created:" + driver);
-		
 		Driver createdDriver = driverRepo.save(driver);
-		
+		LOGGER.info("Driver created for {}: {}", createdDriver.getId(), createdDriver);		
 		return createdDriver;
 	}
 
@@ -52,6 +54,5 @@ public class DriverController {
 	@RequestMapping(value="/driver/{id}",  method=RequestMethod.DELETE)
 	public void deleteVehicle(@PathVariable("id") long id){			
 		driverRepo.delete(id);		
-		
 	}
 }
